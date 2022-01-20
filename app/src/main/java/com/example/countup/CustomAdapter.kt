@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +17,7 @@ import java.time.temporal.ChronoUnit
 
 
 class CustomAdapter(
-    private var mList: List<ItemsViewModel>,
+    private var mList: MutableList<ItemsViewModel>,
     val context: Context,
     val db: DataBaseHandler
 ) :
@@ -52,10 +53,18 @@ class CustomAdapter(
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val typeView = itemView.findViewById<TextView>(R.id.type)
         private val daysView = itemView.findViewById<TextView>(R.id.daysValue)
+        private val frameLayout = itemView.findViewById<FrameLayout>(R.id.frame)
 
         fun bind(item: ItemsViewModel) {
             daysView.text = item.days
             typeView.text = item.type
+            frameLayout.setOnLongClickListener {
+                db.deleteData(item.id)
+                mList.removeAt(bindingAdapterPosition)
+                notifyItemRemoved(bindingAdapterPosition)
+                notifyItemRangeChanged(bindingAdapterPosition, mList.size)
+                true
+            }
         }
     }
 
@@ -73,15 +82,17 @@ class CustomAdapter(
                 try {
                     val days =
                         ChronoUnit.DAYS.between(LocalDate.parse(dateView.text), LocalDate.now())
-                    // Add item to recycler list
-                    mList += ItemsViewModel(nameEditText.text.toString(), days.toString())
+
                     // Add item to database
-                    db.insertData(
+                    val id = db.insertData(
                         CounterModel(
+                            0, // Note: this doesn't get used
                             nameEditText.text.toString(),
                             LocalDate.parse(dateView.text)
                         )
                     )
+                    // Add item to recycler list
+                    mList.add(ItemsViewModel(id, nameEditText.text.toString(), days.toString()))
                     // Snap to new item
                     notifyItemInserted(mList.size)
                 } catch (e: DateTimeParseException) {

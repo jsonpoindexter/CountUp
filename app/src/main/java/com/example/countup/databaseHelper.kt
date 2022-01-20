@@ -28,13 +28,26 @@ class DataBaseHandler(private var context: Context) : SQLiteOpenHelper(
         //onCreate(db);
     }
 
-    fun insertData(item: CounterModel) {
+    // Create new entry in TABLENAME
+    fun insertData(item: CounterModel): Number {
         val database = this.writableDatabase
         val contentValues = ContentValues()
         contentValues.put(COL_TYPE, item.type)
         contentValues.put(COL_START_DATE, item.startDate.toString())
         val result = database.insert(TABLENAME, null, contentValues)
         if (result == (0).toLong()) {
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
+        }
+        return result
+    }
+
+    // Delete entry from TABLENAME
+    fun deleteData(id: Number) {
+        val database = this.writableDatabase
+        val result = database.delete(TABLENAME, "$COL_ID =?", arrayOf(id.toString()))
+        if (result == 0) {
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
         } else {
             Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
@@ -54,7 +67,11 @@ class DataBaseHandler(private var context: Context) : SQLiteOpenHelper(
 
                 @SuppressLint("Range")
                 val startDate = result.getString(result.getColumnIndex(COL_START_DATE))
-                val item = CounterModel(type, LocalDate.parse(startDate))
+
+                @SuppressLint("Range")
+                val id = result.getInt(result.getColumnIndex(COL_ID))
+
+                val item = CounterModel(id, type, LocalDate.parse(startDate))
                 list.add(item)
             } while (result.moveToNext())
         }

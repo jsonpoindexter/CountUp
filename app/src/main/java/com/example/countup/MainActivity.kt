@@ -28,12 +28,14 @@ class MainActivity : Activity() {
         val db = DataBaseHandler(this)
         println("database Entries: " + db.readData())
 
-        val countList = db.readData().map {
+        val countList = mutableListOf<ItemsViewModel>()
+        countList.addAll(db.readData().map {
             ItemsViewModel(
+                it.id,
                 it.type,
                 ChronoUnit.DAYS.between(it.startDate, LocalDate.now()).toString()
             )
-        }
+        })
 
         val adapter = CustomAdapter(countList, this, db)
         recyclerView.adapter = adapter
