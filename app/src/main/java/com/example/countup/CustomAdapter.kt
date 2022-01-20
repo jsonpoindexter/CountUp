@@ -8,6 +8,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 
 class CustomAdapter(private var mList: List<ItemsViewModel>) :
@@ -60,8 +61,8 @@ class CustomAdapter(private var mList: List<ItemsViewModel>) :
             // Default to current date
             dateView.setText(LocalDate.now().toString())
             addButton.setOnClickListener {
-                val date = LocalDate.parse(dateView.text)
-                mList += ItemsViewModel(nameEditText.text.toString(), date.toString())
+                val days = ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(dateView.text))
+                mList += ItemsViewModel(nameEditText.text.toString(), days.toString())
                 // Snap to new item
                 notifyItemInserted(mList.size)
 
