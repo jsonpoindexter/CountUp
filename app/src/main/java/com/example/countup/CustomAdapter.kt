@@ -1,17 +1,21 @@
 package com.example.countup
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDate
+import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
 
 
-class CustomAdapter(private var mList: List<ItemsViewModel>) :
+class CustomAdapter(private var mList: List<ItemsViewModel>, val context: Context) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -62,14 +66,22 @@ class CustomAdapter(private var mList: List<ItemsViewModel>) :
             dateView.setText(LocalDate.now().toString())
 
             addButton.setOnClickListener {
-                val days = ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(dateView.text))
-                mList += ItemsViewModel(nameEditText.text.toString(), days.toString())
-                // Snap to new item
-                notifyItemInserted(mList.size)
-
-                // Reset values
-                dateView.setText(LocalDate.now().toString())
-                nameEditText.setText("")
+                try {
+                    val days =
+                        ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(dateView.text))
+                    mList += ItemsViewModel(nameEditText.text.toString(), days.toString())
+                    // Snap to new item
+                    notifyItemInserted(mList.size)
+                } catch (e: DateTimeParseException) {
+                    val shake: Animation =
+                        AnimationUtils.loadAnimation(context, R.anim.shake)
+                    dateView.startAnimation(shake)
+                    println(e)
+                } finally {
+                    // Reset values
+                    dateView.setText(LocalDate.now().toString())
+                    nameEditText.setText("")
+                }
             }
             // Reset fields
             deleteButton.setOnClickListener {

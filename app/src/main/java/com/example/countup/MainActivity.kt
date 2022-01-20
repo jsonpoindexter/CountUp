@@ -36,7 +36,7 @@ class MainActivity : Activity() {
         recyclerView.apply {
             layoutManager = WearableLinearLayoutManager(this@MainActivity)
         }
-        val adapter = CustomAdapter(countList)
+        val adapter = CustomAdapter(countList, this)
         recyclerView.adapter = adapter
 
         val snapHelper: SnapHelper = PagerSnapHelper()
