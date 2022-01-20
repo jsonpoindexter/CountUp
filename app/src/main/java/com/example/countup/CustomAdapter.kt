@@ -60,6 +60,7 @@ class CustomAdapter(private var mList: List<ItemsViewModel>) :
         fun bind() {
             // Default to current date
             dateView.setText(LocalDate.now().toString())
+
             addButton.setOnClickListener {
                 val days = ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(dateView.text))
                 mList += ItemsViewModel(nameEditText.text.toString(), days.toString())
@@ -67,6 +68,11 @@ class CustomAdapter(private var mList: List<ItemsViewModel>) :
                 notifyItemInserted(mList.size)
 
                 // Reset values
+                dateView.setText(LocalDate.now().toString())
+                nameEditText.setText("")
+            }
+            // Reset fields
+            deleteButton.setOnClickListener {
                 dateView.setText(LocalDate.now().toString())
                 nameEditText.setText("")
             }
