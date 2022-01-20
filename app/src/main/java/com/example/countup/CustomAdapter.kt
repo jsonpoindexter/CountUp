@@ -1,6 +1,9 @@
 package com.example.countup
 
+import android.app.DatePickerDialog
 import android.content.Context
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,16 +13,19 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
+import java.util.*
 
 
 class CustomAdapter(
     private var mList: MutableList<ItemsViewModel>,
     val context: Context,
-    val db: DataBaseHandler
+    val db: DataBaseHandler,
+    val supportFragmentManager: FragmentManager
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -69,26 +75,47 @@ class CustomAdapter(
     }
 
     inner class AddViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val dateView = itemView.findViewById<EditText>(R.id.date)
+        private val dateEditText = itemView.findViewById<EditText>(R.id.date)
         private val nameEditText = itemView.findViewById<EditText>(R.id.name)
         private val addButton = itemView.findViewById<ImageButton>(R.id.addButton)
         private val deleteButton = itemView.findViewById<ImageButton>(R.id.deleteButton)
 
         fun bind() {
             // Default to current date
-            dateView.setText(LocalDate.now().toString())
+            dateEditText.setText(LocalDate.now().toString())
+
+            dateEditText.setOnClickListener {
+                println("Date action")
+                val cal = Calendar.getInstance()
+                val dateSetListener =
+                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                        cal.set(Calendar.YEAR, year)
+                        cal.set(Calendar.MONTH, monthOfYear)
+                        cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                        val myFormat = "yyyy-MM-dd" // format you need
+                        val sdf = SimpleDateFormat(myFormat, Locale.US)
+                        dateEditText.setText(sdf.format(cal.time))
+
+                    }
+                DatePickerDialog(
+                    context, dateSetListener,
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)
+                ).show()
+            }
 
             addButton.setOnClickListener {
                 try {
                     val days =
-                        ChronoUnit.DAYS.between(LocalDate.parse(dateView.text), LocalDate.now())
+                        ChronoUnit.DAYS.between(LocalDate.parse(dateEditText.text), LocalDate.now())
 
                     // Add item to database
                     val id = db.insertData(
                         CounterModel(
                             0, // Note: this doesn't get used
                             nameEditText.text.toString(),
-                            LocalDate.parse(dateView.text)
+                            LocalDate.parse(dateEditText.text)
                         )
                     )
                     // Add item to recycler list
@@ -98,17 +125,17 @@ class CustomAdapter(
                 } catch (e: DateTimeParseException) {
                     val shake: Animation =
                         AnimationUtils.loadAnimation(context, R.anim.shake)
-                    dateView.startAnimation(shake)
+                    dateEditText.startAnimation(shake)
                     println(e)
                 } finally {
                     // Reset values
-                    dateView.setText(LocalDate.now().toString())
+                    dateEditText.setText(LocalDate.now().toString())
                     nameEditText.setText("")
                 }
             }
             // Reset fields
             deleteButton.setOnClickListener {
-                dateView.setText(LocalDate.now().toString())
+                dateEditText.setText(LocalDate.now().toString())
                 nameEditText.setText("")
             }
         }

@@ -1,7 +1,7 @@
 package com.example.countup
 
-import android.app.Activity
 import android.os.Bundle
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import androidx.wear.widget.WearableLinearLayoutManager
@@ -10,7 +10,7 @@ import com.example.countup.databinding.ActivityMainBinding
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-class MainActivity : Activity() {
+class MainActivity : FragmentActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -25,6 +25,7 @@ class MainActivity : Activity() {
             layoutManager = WearableLinearLayoutManager(this@MainActivity)
         }
 
+
         val db = DataBaseHandler(this)
         println("database Entries: " + db.readData())
 
@@ -37,10 +38,15 @@ class MainActivity : Activity() {
             )
         })
 
-        val adapter = CustomAdapter(countList, this, db)
+        val adapter = CustomAdapter(countList, this, db, supportFragmentManager)
         recyclerView.adapter = adapter
 
         val snapHelper: SnapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(recyclerView)
+
+//        val manager: FragmentManager = getSupportFragmentManager()
+//        val transaction: FragmentTransaction = manager.beginTransaction()
+//        transaction.add(frameId, fragment)
+//        transaction.commit()
     }
 }
