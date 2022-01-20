@@ -10,18 +10,6 @@ import com.example.countup.databinding.ActivityMainBinding
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-val countList = listOf(
-    ItemsViewModel(
-        "Hospital",
-        ChronoUnit.DAYS.between(LocalDate.of(2021, 11, 28), LocalDate.now()).toString()
-    ),
-    ItemsViewModel(
-        "Chemo",
-        ChronoUnit.DAYS.between(LocalDate.of(2022, 1, 1), LocalDate.now()).toString()
-    ),
-)
-
-
 class MainActivity : Activity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -36,7 +24,18 @@ class MainActivity : Activity() {
         recyclerView.apply {
             layoutManager = WearableLinearLayoutManager(this@MainActivity)
         }
-        val adapter = CustomAdapter(countList, this)
+
+        val db = DataBaseHandler(this)
+        println("database Entries: " + db.readData())
+
+        val countList = db.readData().map {
+            ItemsViewModel(
+                it.type,
+                ChronoUnit.DAYS.between(it.startDate, LocalDate.now()).toString()
+            )
+        }
+
+        val adapter = CustomAdapter(countList, this, db)
         recyclerView.adapter = adapter
 
         val snapHelper: SnapHelper = PagerSnapHelper()

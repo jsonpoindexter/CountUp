@@ -15,7 +15,11 @@ import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
 
 
-class CustomAdapter(private var mList: List<ItemsViewModel>, val context: Context) :
+class CustomAdapter(
+    private var mList: List<ItemsViewModel>,
+    val context: Context,
+    val db: DataBaseHandler
+) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -68,8 +72,16 @@ class CustomAdapter(private var mList: List<ItemsViewModel>, val context: Contex
             addButton.setOnClickListener {
                 try {
                     val days =
-                        ChronoUnit.DAYS.between(LocalDate.now(), LocalDate.parse(dateView.text))
+                        ChronoUnit.DAYS.between(LocalDate.parse(dateView.text), LocalDate.now())
+                    // Add item to recycler list
                     mList += ItemsViewModel(nameEditText.text.toString(), days.toString())
+                    // Add item to database
+                    db.insertData(
+                        CounterModel(
+                            nameEditText.text.toString(),
+                            LocalDate.parse(dateView.text)
+                        )
+                    )
                     // Snap to new item
                     notifyItemInserted(mList.size)
                 } catch (e: DateTimeParseException) {
