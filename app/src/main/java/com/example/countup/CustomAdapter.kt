@@ -4,12 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDate
 
 
-class CustomAdapter(private val mList: List<ItemsViewModel>) :
+class CustomAdapter(private var mList: List<ItemsViewModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -50,14 +51,24 @@ class CustomAdapter(private val mList: List<ItemsViewModel>) :
     }
 
     inner class AddViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val dateView = itemView.findViewById<EditText>(R.id.editTextDate)
+        private val dateView = itemView.findViewById<EditText>(R.id.date)
+        private val nameEditText = itemView.findViewById<EditText>(R.id.name)
+        private val addButton = itemView.findViewById<ImageButton>(R.id.addButton)
+        private val deleteButton = itemView.findViewById<ImageButton>(R.id.deleteButton)
 
         fun bind() {
             // Default to current date
             dateView.setText(LocalDate.now().toString())
-//            btn.setOnClickListener {
-//                //Do your logic here for the button
-//            }
+            addButton.setOnClickListener {
+                val date = LocalDate.parse(dateView.text)
+                mList += ItemsViewModel(nameEditText.text.toString(), date.toString())
+                // Snap to new item
+                notifyItemInserted(mList.size)
+
+                // Reset values
+                dateView.setText(LocalDate.now().toString())
+                nameEditText.setText("")
+            }
         }
     }
 }
