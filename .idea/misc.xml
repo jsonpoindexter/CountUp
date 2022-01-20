@@ -5,7 +5,9 @@
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/add_counter_design.xml" value="0.5506329113924051" />
         <entry key="app/src/main/res/layout/card_view_design.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/counter_populated_design.xml" value="0.5506329113924051" />
       </map>
     </option>
   </component>

@@ -13,12 +13,12 @@ import java.time.temporal.ChronoUnit
 val countList = listOf(
     ItemsViewModel(
         "Hospital",
-        ChronoUnit.DAYS.between(LocalDate.of(2021, 11, 28), LocalDate.now())
+        ChronoUnit.DAYS.between(LocalDate.of(2021, 11, 28), LocalDate.now()).toString()
     ),
     ItemsViewModel(
         "Chemo",
-        ChronoUnit.DAYS.between(LocalDate.of(2022, 1, 1), LocalDate.now())
-    )
+        ChronoUnit.DAYS.between(LocalDate.of(2022, 1, 1), LocalDate.now()).toString()
+    ),
 )
 
 

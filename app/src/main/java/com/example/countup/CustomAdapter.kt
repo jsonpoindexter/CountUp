@@ -6,37 +6,54 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
+
 class CustomAdapter(private val mList: List<ItemsViewModel>) :
-    RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    // create new views
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // inflates the counter_populated_design view
-        // that is used to hold list item
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.counter_populated_design, parent, false)
-
-        return ViewHolder(view)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == R.layout.counter_populated_design) {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.counter_populated_design, parent, false)
+            ViewHolder(view)
+        } else {
+            val view = LayoutInflater.from(parent.context)
+                .inflate(R.layout.add_counter_design, parent, false)
+            AddViewHolder(view)
+        }
     }
 
-    // binds the list items to a view
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-        val itemsViewModel = mList[position]
-        // sets the text to the textview from our itemHolder class
-        holder.textView.text = itemsViewModel.days.toString()
-        holder.typeView.text = itemsViewModel.type
-
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        when (getItemViewType(position)) {
+            R.layout.counter_populated_design -> (holder as ViewHolder).bind(mList[position])
+            R.layout.add_counter_design -> (holder as AddViewHolder).bind()
+        }
     }
 
-    // return the number of the items in the list
     override fun getItemCount(): Int {
-        return mList.size
+        return mList.size + 1
     }
 
-    // Holds the views for adding it to image and text
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val textView: TextView = itemView.findViewById(R.id.daysValue)
-        val typeView: TextView = itemView.findViewById(R.id.type)
+    override fun getItemViewType(position: Int): Int {
+        return if (position == mList.size) R.layout.add_counter_design else R.layout.counter_populated_design
+    }
+
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val typeView = itemView.findViewById<TextView>(R.id.type)
+        private val daysView = itemView.findViewById<TextView>(R.id.daysValue)
+
+        fun bind(item: ItemsViewModel) {
+            daysView.text = item.days
+            typeView.text = item.type
+        }
+    }
+
+    inner class AddViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+//        private val btn = itemView.findViewById<EditText>(R.id.a)
+
+        fun bind() {
+//            btn.setOnClickListener {
+//                //Do your logic here for the button
+//            }
+        }
     }
 }
