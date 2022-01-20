@@ -1,12 +1,15 @@
 package com.example.countup
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
-import android.widget.TextView
+import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.SnapHelper
+import androidx.wear.widget.WearableLinearLayoutManager
+import androidx.wear.widget.WearableRecyclerView
 import com.example.countup.databinding.ActivityMainBinding
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+
 
 class MainActivity : Activity() {
 
@@ -18,19 +21,25 @@ class MainActivity : Activity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val typeView = findViewById<TextView>(R.id.type)
-        @SuppressLint("SetTextI18n") // TODO: remove once dynamic
-        typeView.text = "Hospital"
+        val countList = listOf(
+            ItemsViewModel(
+                "Hospital",
+                ChronoUnit.DAYS.between(LocalDate.of(2021, 11, 28), LocalDate.now())
+            ),
+            ItemsViewModel(
+                "Chemo",
+                ChronoUnit.DAYS.between(LocalDate.of(2022, 1, 1), LocalDate.now())
+            )
+        )
 
-        // Start date will be user input
-        val startDate = LocalDate.of(2021, 11, 28)
-        val currDate = LocalDate.now()
-        println(startDate)
-        println(currDate)
-        val diff = ChronoUnit.DAYS.between(startDate, currDate)
-        println("DateDiff: $diff")
-        val daysView = findViewById<TextView>(R.id.daysValue)
-        daysView.text = diff.toString()
+        val recyclerView = findViewById<WearableRecyclerView>(R.id.recycler_launcher_view)
+        recyclerView.apply {
+            layoutManager = WearableLinearLayoutManager(this@MainActivity)
+        }
+        val adapter = CustomAdapter(countList)
+        recyclerView.adapter = adapter
 
+        val snapHelper: SnapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(recyclerView)
     }
 }

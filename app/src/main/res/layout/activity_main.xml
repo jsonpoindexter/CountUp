@@ -1,44 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/box_inset_layout_padding"
-    tools:context=".MainActivity"
-    tools:deviceIds="wear">
+    tools:context=".MainActivity">
 
-    <FrameLayout
+    <androidx.wear.widget.WearableRecyclerView
+        android:id="@+id/recycler_launcher_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/inner_frame_layout_padding"
-        app:layout_boxedEdges="all">
+        android:scrollbars="vertical"
+        tools:ignore="SpeakableTextPresentCheck">
 
-        <TextView
-            android:id="@+id/type"
-            android:layout_width="wrap_content"
-            android:layout_height="23dp"
-            android:layout_gravity="top"
-            android:ems="10"
-            android:gravity="center_horizontal"
-            android:minHeight="48dp" />
+    </androidx.wear.widget.WearableRecyclerView>
 
-        <TextView
-            android:id="@+id/daysValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:ems="10"
-            android:gravity="center"
-            android:minHeight="48dp"
-            android:textSize="96sp" />
-
-        <TextView
-            android:id="@+id/units"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:text="@string/days" />
-
-    </FrameLayout>
-</androidx.wear.widget.BoxInsetLayout>
+</LinearLayout>
