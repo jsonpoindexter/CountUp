@@ -3,8 +3,10 @@ package com.example.countup
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import java.time.LocalDate
 
 
 class CustomAdapter(private val mList: List<ItemsViewModel>) :
@@ -48,9 +50,11 @@ class CustomAdapter(private val mList: List<ItemsViewModel>) :
     }
 
     inner class AddViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        private val btn = itemView.findViewById<EditText>(R.id.a)
+        private val dateView = itemView.findViewById<EditText>(R.id.editTextDate)
 
         fun bind() {
+            // Default to current date
+            dateView.setText(LocalDate.now().toString())
 //            btn.setOnClickListener {
 //                //Do your logic here for the button
 //            }

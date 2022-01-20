@@ -19,8 +19,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:hint="Name"
             android:inputType="textPersonName"
-            android:minHeight="48dp"
-            android:text="Name" />
+            android:minHeight="48dp" />
+
+        <EditText
+            android:id="@+id/editTextDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:ems="10"
+            android:hint="Date"
+            android:inputType="date" />
     </FrameLayout>
 </androidx.wear.widget.BoxInsetLayout>
