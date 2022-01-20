@@ -10,6 +10,17 @@ import com.example.countup.databinding.ActivityMainBinding
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
+val countList = listOf(
+    ItemsViewModel(
+        "Hospital",
+        ChronoUnit.DAYS.between(LocalDate.of(2021, 11, 28), LocalDate.now())
+    ),
+    ItemsViewModel(
+        "Chemo",
+        ChronoUnit.DAYS.between(LocalDate.of(2022, 1, 1), LocalDate.now())
+    )
+)
+
 
 class MainActivity : Activity() {
 
@@ -20,17 +31,6 @@ class MainActivity : Activity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val countList = listOf(
-            ItemsViewModel(
-                "Hospital",
-                ChronoUnit.DAYS.between(LocalDate.of(2021, 11, 28), LocalDate.now())
-            ),
-            ItemsViewModel(
-                "Chemo",
-                ChronoUnit.DAYS.between(LocalDate.of(2022, 1, 1), LocalDate.now())
-            )
-        )
 
         val recyclerView = findViewById<WearableRecyclerView>(R.id.recycler_launcher_view)
         recyclerView.apply {
