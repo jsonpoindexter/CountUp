@@ -7,8 +7,6 @@ import androidx.recyclerview.widget.SnapHelper
 import androidx.wear.widget.WearableLinearLayoutManager
 import androidx.wear.widget.WearableRecyclerView
 import com.example.countup.databinding.ActivityMainBinding
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
 
 class MainActivity : FragmentActivity() {
 
@@ -28,16 +26,10 @@ class MainActivity : FragmentActivity() {
 
         val db = DataBaseHandler(this)
 
-        val countList = mutableListOf<ItemsViewModel>()
-        countList.addAll(db.readData().map {
-            ItemsViewModel(
-                it.id,
-                it.type,
-                ChronoUnit.DAYS.between(it.startDate, LocalDate.now()).toString()
-            )
-        })
+        val countList = mutableListOf<CounterModel>()
+        countList.addAll(db.readData())
 
-        val adapter = CustomAdapter(countList, this, db, supportFragmentManager)
+        val adapter = CustomAdapter(countList, this, db)
         recyclerView.adapter = adapter
 
         val snapHelper: SnapHelper = PagerSnapHelper()

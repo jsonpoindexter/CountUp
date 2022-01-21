@@ -15,19 +15,18 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class CustomAdapter(
-    private var mList: MutableList<ItemsViewModel>,
+    private var mList: MutableList<CounterModel>,
     val context: Context,
     val db: DataBaseHandler,
-    val supportFragmentManager: FragmentManager
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -45,7 +44,27 @@ class CustomAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (getItemViewType(position)) {
-            R.layout.counter_populated_design -> (holder as ViewHolder).bind(mList[position])
+            R.layout.counter_populated_design -> {
+                (holder as ViewHolder).bind(mList[position])
+                // Schedule counters to update after midnight next day
+                val today = Calendar.getInstance()
+                today.add(Calendar.DATE, 1)
+                today.set(Calendar.HOUR_OF_DAY, 0)
+                today.set(Calendar.MINUTE, 0)
+                today.set(Calendar.SECOND, 0)
+                Timer().schedule(object : TimerTask() {
+                    override fun run() {
+                        val daysView = holder.itemView.findViewById<TextView>(R.id.daysValue)
+                        daysView.text =
+                            ChronoUnit.DAYS.between(
+                                mList[holder.bindingAdapterPosition].startDate,
+                                LocalDate.now()
+                            )
+                                .toString()
+                    }
+                }, today.time, TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS))
+
+            }
             R.layout.add_counter_design -> (holder as AddViewHolder).bind()
         }
     }
@@ -62,9 +81,8 @@ class CustomAdapter(
         private val typeView = itemView.findViewById<TextView>(R.id.type)
         private val daysView = itemView.findViewById<TextView>(R.id.daysValue)
         private val frameLayout = itemView.findViewById<FrameLayout>(R.id.frame)
-
-        fun bind(item: ItemsViewModel) {
-            daysView.text = item.days
+        fun bind(item: CounterModel) {
+            daysView.text = ChronoUnit.DAYS.between(item.startDate, LocalDate.now()).toString()
             typeView.text = item.type
             frameLayout.setOnLongClickListener {
                 val dialog = Dialog(context)
@@ -100,8 +118,9 @@ class CustomAdapter(
         private val deleteButton = itemView.findViewById<ImageButton>(R.id.deleteButton)
 
         fun bind() {
+            val currentDate = LocalDate.now()
             // Default to current date
-            dateEditText.setText(LocalDate.now().toString())
+            dateEditText.setText(currentDate.toString())
 
             dateEditText.setOnClickListener {
                 val cal = Calendar.getInstance()
@@ -125,19 +144,17 @@ class CustomAdapter(
 
             addButton.setOnClickListener {
                 try {
-                    val days =
-                        ChronoUnit.DAYS.between(LocalDate.parse(dateEditText.text), LocalDate.now())
-
+                    val date = LocalDate.parse(dateEditText.text)
                     // Add item to database
                     val id = db.insertData(
                         CounterModel(
                             0, // Note: this doesn't get used
                             nameEditText.text.toString(),
-                            LocalDate.parse(dateEditText.text)
+                            date
                         )
                     )
                     // Add item to recycler list
-                    mList.add(ItemsViewModel(id, nameEditText.text.toString(), days.toString()))
+                    mList.add(CounterModel(id, nameEditText.text.toString(), date))
                     // Snap to new item
                     notifyItemInserted(mList.size)
                 } catch (e: DateTimeParseException) {
@@ -147,13 +164,13 @@ class CustomAdapter(
                     println(e)
                 } finally {
                     // Reset values
-                    dateEditText.setText(LocalDate.now().toString())
+                    dateEditText.setText(currentDate.toString())
                     nameEditText.setText("")
                 }
             }
             // Reset fields
             deleteButton.setOnClickListener {
-                dateEditText.setText(LocalDate.now().toString())
+                dateEditText.setText(currentDate.toString())
                 nameEditText.setText("")
             }
         }
