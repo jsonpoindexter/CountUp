@@ -8,19 +8,19 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.widget.Toast
 import java.time.LocalDate
 
-const val DATABASENAME = "MY DATABASE"
-const val TABLENAME = "Counters"
+const val DATABASE_NAME = "COUNT_UP"
+const val TABLE_NAME = "Counters"
 const val COL_TYPE = "type"
 const val COL_START_DATE = "startDate"
 const val COL_ID = "id"
 
 class DataBaseHandler(private var context: Context) : SQLiteOpenHelper(
-    context, DATABASENAME, null,
+    context, DATABASE_NAME, null,
     1
 ) {
     override fun onCreate(db: SQLiteDatabase?) {
         val createTable =
-            "CREATE TABLE $TABLENAME ($COL_ID INTEGER PRIMARY KEY AUTOINCREMENT,$COL_TYPE VARCHAR(256),$COL_START_DATE TEXT)"
+            "CREATE TABLE $TABLE_NAME ($COL_ID INTEGER PRIMARY KEY AUTOINCREMENT,$COL_TYPE VARCHAR(256),$COL_START_DATE TEXT)"
         db?.execSQL(createTable)
     }
 
@@ -34,7 +34,7 @@ class DataBaseHandler(private var context: Context) : SQLiteOpenHelper(
         val contentValues = ContentValues()
         contentValues.put(COL_TYPE, item.type)
         contentValues.put(COL_START_DATE, item.startDate.toString())
-        val result = database.insert(TABLENAME, null, contentValues)
+        val result = database.insert(TABLE_NAME, null, contentValues)
         if (result == (0).toLong()) {
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
         } else {
@@ -46,7 +46,7 @@ class DataBaseHandler(private var context: Context) : SQLiteOpenHelper(
     // Delete entry from TABLENAME
     fun deleteData(id: Number) {
         val database = this.writableDatabase
-        val result = database.delete(TABLENAME, "$COL_ID =?", arrayOf(id.toString()))
+        val result = database.delete(TABLE_NAME, "$COL_ID =?", arrayOf(id.toString()))
         if (result == 0) {
             Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
         } else {
@@ -58,7 +58,7 @@ class DataBaseHandler(private var context: Context) : SQLiteOpenHelper(
     fun readData(): MutableList<CounterModel> {
         val list: MutableList<CounterModel> = ArrayList()
         val db = this.readableDatabase
-        val query = "Select * from $TABLENAME"
+        val query = "Select * from $TABLE_NAME"
         val result = db.rawQuery(query, null)
         if (result.moveToFirst()) {
             do {
