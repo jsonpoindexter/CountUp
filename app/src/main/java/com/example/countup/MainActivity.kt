@@ -27,7 +27,6 @@ class MainActivity : FragmentActivity() {
 
 
         val db = DataBaseHandler(this)
-        println("database Entries: " + db.readData())
 
         val countList = mutableListOf<ItemsViewModel>()
         countList.addAll(db.readData().map {
@@ -43,10 +42,5 @@ class MainActivity : FragmentActivity() {
 
         val snapHelper: SnapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(recyclerView)
-
-//        val manager: FragmentManager = getSupportFragmentManager()
-//        val transaction: FragmentTransaction = manager.beginTransaction()
-//        transaction.add(frameId, fragment)
-//        transaction.commit()
     }
 }
