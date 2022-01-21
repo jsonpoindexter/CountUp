@@ -5,7 +5,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import android.widget.Toast
 import java.time.LocalDate
 
 const val DATABASE_NAME = "COUNT_UP"
@@ -34,24 +33,13 @@ class DataBaseHandler(private var context: Context) : SQLiteOpenHelper(
         val contentValues = ContentValues()
         contentValues.put(COL_TYPE, item.type)
         contentValues.put(COL_START_DATE, item.startDate.toString())
-        val result = database.insert(TABLE_NAME, null, contentValues)
-        if (result == (0).toLong()) {
-            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
-        }
-        return result
+        return database.insert(TABLE_NAME, null, contentValues)
     }
 
-    // Delete entry from TABLENAME
+    // Delete entry from TABLE_NAME
     fun deleteData(id: Number) {
         val database = this.writableDatabase
         val result = database.delete(TABLE_NAME, "$COL_ID =?", arrayOf(id.toString()))
-        if (result == 0) {
-            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show()
-        }
     }
 
 
