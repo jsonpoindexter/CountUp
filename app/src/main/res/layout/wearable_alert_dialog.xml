@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/delete"
+            android:layout_width="89dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:fontFamily="sans-serif-condensed"
+            android:gravity="center|center_vertical"
+            android:paddingTop="15sp"
+            android:paddingBottom="15sp"
+            android:text="Delete?"
+            android:textSize="18sp" />
+
+        <FrameLayout
+            android:layout_width="176dp"
+            android:layout_height="87dp"
+            android:padding="5sp">
+
+            <ImageButton
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|bottom"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:src="@drawable/ic_baseline_clear_24"
+                android:text="X" />
+
+            <ImageButton
+                android:id="@+id/btn_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
+                android:src="@drawable/ic_baseline_check_24" />
+        </FrameLayout>
+    </LinearLayout>
+</androidx.wear.widget.BoxInsetLayout>

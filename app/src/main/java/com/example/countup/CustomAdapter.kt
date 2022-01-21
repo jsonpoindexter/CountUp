@@ -1,11 +1,13 @@
 package com.example.countup
 
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.content.Context
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.inflate
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -65,10 +67,27 @@ class CustomAdapter(
             daysView.text = item.days
             typeView.text = item.type
             frameLayout.setOnLongClickListener {
-                db.deleteData(item.id)
-                mList.removeAt(bindingAdapterPosition)
-                notifyItemRemoved(bindingAdapterPosition)
-                notifyItemRangeChanged(bindingAdapterPosition, mList.size)
+                val dialog = Dialog(context)
+                val myLayout = inflate(context, R.layout.wearable_alert_dialog, null)
+
+                val positiveButton = myLayout.findViewById<ImageButton>(R.id.btn_ok)
+                positiveButton.setOnClickListener {
+                    db.deleteData(item.id)
+                    mList.removeAt(bindingAdapterPosition)
+                    notifyItemRemoved(bindingAdapterPosition)
+                    notifyItemRangeChanged(bindingAdapterPosition, mList.size)
+                    dialog.cancel()
+                }
+
+                val negativeButton = myLayout.findViewById<ImageButton>(R.id.btn_cancel)
+                negativeButton.setOnClickListener {
+                    dialog.cancel()
+                }
+
+                dialog.setContentView(myLayout)
+                dialog.show()
+
+
                 true
             }
         }
@@ -85,10 +104,9 @@ class CustomAdapter(
             dateEditText.setText(LocalDate.now().toString())
 
             dateEditText.setOnClickListener {
-                println("Date action")
                 val cal = Calendar.getInstance()
                 val dateSetListener =
-                    DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                    DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                         cal.set(Calendar.YEAR, year)
                         cal.set(Calendar.MONTH, monthOfYear)
                         cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
