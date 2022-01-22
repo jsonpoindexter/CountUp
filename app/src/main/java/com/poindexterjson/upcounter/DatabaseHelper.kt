@@ -1,4 +1,4 @@
-package com.example.upcounter
+package com.poindexterjson.upcounter
 
 import android.annotation.SuppressLint
 import android.content.ContentValues

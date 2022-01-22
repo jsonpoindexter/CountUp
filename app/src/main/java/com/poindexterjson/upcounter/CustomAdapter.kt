@@ -1,4 +1,4 @@
-package com.example.upcounter
+package com.poindexterjson.upcounter
 
 import android.app.DatePickerDialog
 import android.app.Dialog
