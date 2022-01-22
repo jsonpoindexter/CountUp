@@ -19,7 +19,7 @@
             android:gravity="center|center_vertical"
             android:paddingTop="15sp"
             android:paddingBottom="15sp"
-            android:text="Delete?"
+            android:text="@string/delete_question"
             android:textSize="18sp" />
 
         <FrameLayout

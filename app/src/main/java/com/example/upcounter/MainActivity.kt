@@ -1,4 +1,4 @@
-package com.example.countup
+package com.example.upcounter
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.SnapHelper
 import androidx.wear.widget.WearableLinearLayoutManager
 import androidx.wear.widget.WearableRecyclerView
-import com.example.countup.databinding.ActivityMainBinding
+import com.example.upcounter.databinding.ActivityMainBinding
 
 class MainActivity : FragmentActivity() {
 

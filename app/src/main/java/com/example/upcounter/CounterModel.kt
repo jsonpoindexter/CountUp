@@ -1,4 +1,4 @@
-package com.example.countup
+package com.example.upcounter
 
 import java.time.LocalDate
 
