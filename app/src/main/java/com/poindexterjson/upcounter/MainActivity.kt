@@ -11,6 +11,7 @@ import com.poindexterjson.upcounter.databinding.ActivityMainBinding
 class MainActivity : FragmentActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var adapter: CustomAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,10 +30,15 @@ class MainActivity : FragmentActivity() {
         val countList = mutableListOf<CounterModel>()
         countList.addAll(db.readData())
 
-        val adapter = CustomAdapter(countList, this, db)
+        adapter = CustomAdapter(countList, this, db)
         recyclerView.adapter = adapter
 
         val snapHelper: SnapHelper = PagerSnapHelper()
         snapHelper.attachToRecyclerView(recyclerView)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        this.adapter.destroyTimers()
     }
 }

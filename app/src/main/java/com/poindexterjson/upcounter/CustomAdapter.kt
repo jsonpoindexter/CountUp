@@ -30,6 +30,12 @@ class CustomAdapter(
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    private val timer = Timer()
+
+    fun destroyTimers() {
+        this.timer.cancel()
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == R.layout.counter_populated_design) {
             val view = LayoutInflater.from(parent.context)
@@ -52,7 +58,8 @@ class CustomAdapter(
                 today.set(Calendar.HOUR_OF_DAY, 0)
                 today.set(Calendar.MINUTE, 0)
                 today.set(Calendar.SECOND, 0)
-                Timer().schedule(object : TimerTask() {
+                timer.schedule(object : TimerTask() {
+                    // Run scheduled task at upcoming midnight
                     override fun run() {
                         val daysView = holder.itemView.findViewById<TextView>(R.id.daysValue)
                         daysView.text =
