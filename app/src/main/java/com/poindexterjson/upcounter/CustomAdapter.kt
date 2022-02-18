@@ -32,8 +32,14 @@ class CustomAdapter(
 
     private val timer = Timer()
 
+    // Destroys any running timers
     fun destroyTimers() {
         this.timer.cancel()
+    }
+
+    // Refresh recycler items
+    fun refreshItems() {
+        this.notifyItemRangeChanged(0, mList.size - 1)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

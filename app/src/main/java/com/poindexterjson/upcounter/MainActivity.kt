@@ -41,4 +41,9 @@ class MainActivity : FragmentActivity() {
         super.onDestroy()
         this.adapter.destroyTimers()
     }
+
+    override fun onResume() {
+        super.onResume()
+        this.adapter.refreshItems()
+    }
 }
